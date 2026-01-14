@@ -1,0 +1,69 @@
+body {
+    background-color: #0f172a; /* Dark Blue/Gray */
+    color: #e2e8f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 { margin: 0; font-size: 2.5rem; }
+.badge { background: #10b981; color: #000; font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; vertical-align: middle; }
+header p { color: #94a3b8; margin-top: 5px; }
+
+.main-interface {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden; /* Prevents double scrolling */
+}
+
+.panel {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border: 1px solid #334155;
+}
+
+h2 { margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px; font-size: 1.2rem; }
+
+.scroll-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #0f172a;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Chat Styling */
+.message { margin-bottom: 10px; padding: 10px; border-radius: 8px; max-width: 80%; }
+.message.user { background: #3b82f6; align-self: flex-end; margin-left: auto; text-align: right; color: white; }
+.message.bot { background: #334155; color: #e2e8f0; }
+
+/* Terminal Styling */
+.terminal-look { font-family: 'Courier New', Courier, monospace; color: #10b981; font-size: 0.9rem; }
+.log-entry { margin-bottom: 8px; border-bottom: 1px dashed #334155; padding-bottom: 4px; }
+.log-entry.alert { color: #f59e0b; } /* Orange for sanitized data */
+
+.input-area { display: flex; gap: 10px; }
+textarea { flex: 1; padding: 10px; border-radius: 8px; border: none; font-family: inherit; resize: none; height: 50px; }
+button { background: #10b981; color: #064e3b; border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+button:hover { background: #34d399; }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost-Gate | Zero Trust Proxy</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👻 Ghost-Gate <span class="badge">SECURE</span></h1>
+            <p>Zero-Trust PII Redaction Layer</p>
+        </header>
+
+        <div class="main-interface">
+            <div class="panel chat-panel">
+                <h2>💬 User Chat</h2>
+                <div id="chat-box" class="scroll-box">
+                    <div class="message bot">
+                        Hello! I am a secure AI. Any personal data you send is redacted before it leaves this device.
+                    </div>
+                </div>
+                <div class="input-area">
+                    <textarea id="user-input" placeholder="Type sensitive data here... (e.g. My name is John, SSN 123-45)"></textarea>
+                    <button onclick="sendMessage()">Send Securely 🔒</button>
+                </div>
+            </div>
+
+            <div class="panel log-panel">
+                <h2>🛡️ Live Security Logs</h2>
+                <div id="log-box" class="scroll-box terminal-look">
+                    <div class="log-entry system">[SYSTEM] Ghost-Gate Active...</div>
+                    <div class="log-entry system">[SYSTEM] Redis Vault Connected...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
