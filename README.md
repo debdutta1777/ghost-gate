@@ -1,29 +1,67 @@
-# 👻 Ghost-Gate: Zero-Trust Privacy Layer for LLMs
-**"Chat with AI, keep your data."**
+# 👻 Ghost-Gate | Interstellar Privacy Layer
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/AI-Gemini%202.5-orange?style=for-the-badge&logo=google&logoColor=white)
-![Security](https://img.shields.io/badge/Security-Zero%20Trust-red?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Operational-success)
+![Security](https://img.shields.io/badge/Security-Zero%20Trust-blueviolet)
+![AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-orange)
 
-## 🔍 Overview
-Ghost-Gate is a **Privacy Engineering Middleware** that sits between the user and public LLMs (like Google Gemini or OpenAI). It automatically intercepts prompts, detects sensitive entities (PII, Trade Secrets, Links), and redacts them **before** they leave the local device.
+**Ghost-Gate** is a "Zero-Trust" privacy firewall that sits between you and public AI models (like Google Gemini). It intercepts your messages, **redacts sensitive data locally** (PII, API keys, custom secrets), and only sends the sanitized version to the cloud. When the AI replies, Ghost-Gate **restores the original data** instantly.
 
-Once the AI responds, Ghost-Gate reconstructs the message, re-inserting the original data so the user sees a seamless response, while the cloud provider never sees the secrets.
+**"Your data never leaves your atmosphere."**
 
-## 🛡️ Key Features
-* **Real-Time PII Redaction:** Automatically masks Names, Phone Numbers, Emails, and SSNs using Microsoft Presidio.
-* **Custom Secret Defense:** Users can define "Deny Lists" for specific project code names (e.g., "Project Apollo").
-* **Document RAG (Retrieval Augmented Generation):** Securely upload PDFs. The system extracts text, sanitizes it, and allows Q&A without leaking document secrets.
-* **Link Scrubbing:** Detects and hides URLs (LinkedIn, GitHub) to prevent digital identity tracking.
-* **Zero-Trust Architecture:** Data is sanitized *locally* on the client/server before any API call is made.
+---
 
-## 🏗️ Architecture
-```mermaid
-graph LR
-    User[User Prompt] -->|Raw Text| Engine[Ghost-Gate Engine]
-    Engine -->|Detects Secrets| Vault[(Local Vault)]
-    Engine -->|Sanitized Prompt| Cloud[Google Gemini AI]
-    Cloud -->|Generic Response| Engine
-    Vault -->|Restores Secrets| Engine
-    Engine -->|Final Response| User
+## 🌟 Key Features
+
+### 🛡️ **Zero-Trust Redaction Engine**
+- **Automated PII Scanning:** Instantly detects and hides Names, Emails, Phone Numbers, and US SSNs using **Microsoft Presidio**.
+- **Custom Deny List:** Manually specify secret project names (e.g., "Project Apollo") to hide them from the AI.
+- **Local Restoration:** The AI says `<PERSON_1>`, but you see **John Doe**. The mapping table never leaves your RAM.
+
+### 👁️ **Ghost Vision (OCR)**
+- Upload screenshots, invoices, or documents (PNG/JPG).
+- **Tesseract OCR** extracts the text locally.
+- Redacts sensitive info from the *pixels* before the AI analyzes it.
+
+### 🧠 **Robust AI Core**
+- **Self-Healing Connection:** Automatically switches models (`Flash` → `Flash-Lite` → `Pro`) if Google's API quota is exceeded (429 Errors).
+- **Context-Aware:** Handles multi-turn conversations and file attachments (PDFs, Code, Images).
+
+### 🎨 **"Interstellar" UI**
+- Fully responsive **Quantum/Sci-Fi Interface**.
+- **Visuals:** Animated Nebula backgrounds, Holographic Data Grids, and Quantum Particles.
+- **Audio Feedback:** Interactive sci-fi bleeps and bloops for user actions.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Backend:** Python, FastAPI, Uvicorn
+- **Frontend:** HTML5, CSS3 (Glassmorphism), Vanilla JS
+- **AI Model:** Google Gemini (via `google-generativeai`)
+- **Security:** Microsoft Presidio (`presidio-analyzer`), RegEx
+- **OCR:** Tesseract (`pytesseract`), Pillow
+- **PDF:** `pypdf`
+
+---
+
+## 🚀 Installation
+
+### 1. Prerequisites
+- **Python 3.9+**
+- **Tesseract OCR** (Required for Image Analysis)
+  - *Windows:* [Download Installer](https://github.com/UB-Mannheim/tesseract/wiki) (Install to `C:\Program Files\Tesseract-OCR`)
+  - *Mac:* `brew install tesseract`
+
+### 2. Clone & Setup
+```bash
+git clone [https://github.com/yourusername/ghost-gate.git](https://github.com/yourusername/ghost-gate.git)
+cd ghost-gate
+
+# Create Virtual Environment
+python -m venv venv
+
+# Activate (Windows)
+.\venv\Scripts\Activate
+
+# Activate (Mac/Linux)
+source venv/bin/activate

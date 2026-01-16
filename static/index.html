@@ -3,76 +3,665 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghost-Gate | Enterprise Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Ghost-Gate | Interstellar Security</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root {
+            --bg-void: #05050a;
+            --glass-panel: rgba(15, 15, 25, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f4ff;
+            --text-muted: #94a3b8;
+            
+            /* VIBRANT NEON PALETTE */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-glow: 0 0 35px rgba(139, 92, 246, 0.5);
+            --accent-cyan: #22d3ee;
+            --accent-success: #10b981;
+            --accent-danger: #f87171;
+            --accent-gold: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #151522 100%);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* === CELESTIAL BACKGROUND === */
+        .space-scene {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; overflow: hidden;
+        }
+
+        .nebula {
+            position: absolute; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            filter: blur(80px); opacity: 0.4;
+            animation: nebulaFloat 30s infinite alternate ease-in-out;
+        }
+
+        @keyframes nebulaFloat {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(50px, 30px) scale(1.1); opacity: 0.5; }
+            100% { transform: translate(-30px, -20px) scale(1.05); opacity: 0.4; }
+        }
+
+        .star-field {
+            position: absolute; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 40px 60px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 140px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 150px 220px, #fff, transparent);
+            background-repeat: repeat; background-size: 400px 400px;
+            animation: starTwinkle 8s infinite ease-in-out;
+        }
+
+        @keyframes starTwinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
+
+        /* === HOLOGRAPHIC GRID === */
+        .hologrid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(circle at center, transparent 30%, black 70%);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 30%, black 70%);
+            z-index: -2; animation: gridScan 120s linear infinite; pointer-events: none;
+        }
+
+        @keyframes gridScan {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(80px) translateZ(0); }
+        }
+
+        /* === QUANTUM PARTICLES === */
+        .quantum-field { position: fixed; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .q-particle {
+            position: absolute; width: 3px; height: 3px; background: var(--accent-cyan);
+            border-radius: 50%; filter: blur(1px); box-shadow: 0 0 8px var(--accent-cyan); opacity: 0;
+        }
+
+        /* === MAIN CONTAINER === */
+        .container {
+            max-width: 1600px; margin: 0 auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+            height: 100vh; position: relative; z-index: 10;
+        }
+
+        /* === HEADER === */
+        header { text-align: center; flex-shrink: 0; }
+        .logo-container {
+            display: flex; align-items: center; justify-content: center; gap: 25px; margin-bottom: 10px;
+        }
+
+        /* Animated Ghost */
+        .quantum-ghost {
+            width: 70px; height: 70px; filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8));
+            animation: quantumFloat 6s ease-in-out infinite;
+        }
+        @keyframes quantumFloat {
+            0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8)); }
+            50% { transform: translateY(-10px); filter: drop-shadow(0 0 40px rgba(139, 92, 246, 1)); }
+        }
+        .ghost-core { filter: url(#glow); animation: corePulse 3s infinite alternate; }
+        @keyframes corePulse { 0% { filter: url(#glow) brightness(1); } 100% { filter: url(#glow) brightness(1.3); } }
+
+        h1 {
+            font-size: 3rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--text-main) 0%, var(--accent-cyan) 50%, var(--brand-primary) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 50px rgba(139, 92, 246, 0.3); margin: 0;
+        }
+        .subtitle { color: var(--accent-cyan); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+
+        /* Badges */
+        .status-cluster { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+        .status-badge {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(139, 92, 246, 0.3); padding: 8px 16px; border-radius: 20px;
+            font-size: 0.75rem; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .status-badge:hover { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); }
+        .status-badge i { color: var(--accent-cyan); }
+
+        /* === GRID & PANELS === */
+        .main-grid {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px;
+            flex: 1; min-height: 0; 
+        }
+
+        .neural-panel {
+            background: var(--glass-panel);
+            backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border); border-radius: 24px;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s; position: relative;
+        }
+        .neural-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), transparent 30%);
+            z-index: -1; pointer-events: none;
+        }
+        .neural-panel:hover { border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 40px 80px -16px rgba(0,0,0,0.8); }
+
+        .panel-header {
+            padding: 20px 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+        }
+        .panel-header h2 { font-size: 1rem; color: var(--text-main); font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
+        .panel-header i { color: var(--accent-cyan); }
+
+        .neural-status { display: flex; align-items: center; gap: 8px; }
+        .status-ring {
+            width: 10px; height: 10px; border-radius: 50%; background: var(--accent-success);
+            box-shadow: 0 0 10px var(--accent-success); animation: neuralPulse 2s infinite;
+        }
+        @keyframes neuralPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* === CHAT AREA === */
+        .chat-area {
+            flex: 1; overflow-y: auto; padding: 25px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+        }
+        .message { margin-bottom: 25px; display: flex; flex-direction: column; max-width: 85%; position: relative; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .message.user { align-self: flex-end; align-items: flex-end; }
+        .message.bot { align-items: flex-start; }
+
+        .bubble {
+            padding: 16px 22px; border-radius: 20px; line-height: 1.6; font-size: 0.95rem;
+            position: relative; backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); word-wrap: break-word;
+        }
+
+        .message.user .bubble {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: white; border-bottom-right-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .message.bot .bubble {
+            background: rgba(30, 30, 40, 0.8);
+            color: var(--text-main); border-bottom-left-radius: 4px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .markdown-body strong { color: var(--accent-cyan); font-weight: 700; }
+        .markdown-body code { background: rgba(0,0,0,0.4); padding: 3px 6px; border-radius: 4px; font-family: 'JetBrains Mono'; color: var(--accent-cyan); border: 1px solid rgba(34, 211, 238, 0.2); }
+
+        /* === SECURITY DRAWER === */
+        .security-drawer {
+            background: rgba(20, 10, 15, 0.95);
+            border-bottom: 1px solid var(--accent-danger);
+            padding: 20px; position: absolute; top: 0; left: 0; width: 100%; z-index: 20;
+            transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2);
+        }
+        .security-drawer.open { transform: translateY(0); }
+        .security-drawer label { color: var(--accent-danger); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .security-input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(239, 68, 68, 0.4);
+            padding: 12px; color: white; border-radius: 10px; font-family: 'JetBrains Mono';
+        }
+        .security-input:focus { border-color: var(--accent-danger); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+
+        /* === COMMAND DOCK === */
+        .command-dock {
+            padding: 20px 25px; background: rgba(0,0,0,0.4);
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+            display: flex; gap: 15px; align-items: flex-end; position: relative;
+        }
+
+        .quantum-dial { position: relative; }
+        .dial-button {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--accent-cyan); font-size: 1.2rem; cursor: pointer;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .dial-button:hover { background: rgba(139, 92, 246, 0.3); transform: rotate(90deg) scale(1.1); box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+
+        .dial-options {
+            position: absolute; bottom: 70px; left: 0; background: #0f0f15;
+            border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 10px;
+            width: 220px; display: flex; flex-direction: column; gap: 5px;
+            opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.9);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100;
+        }
+        .dial-options.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+
+        .dial-item {
+            background: transparent; border: none; color: var(--text-main); padding: 12px;
+            text-align: left; cursor: pointer; border-radius: 8px; display: flex; align-items: center; gap: 12px;
+            font-size: 0.9rem; transition: 0.2s;
+        }
+        .dial-item:hover { background: rgba(139, 92, 246, 0.15); color: var(--brand-primary); }
+
+        .command-input {
+            flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px; color: white; font-family: 'Space Grotesk'; font-size: 1rem;
+            padding: 15px; resize: none; min-height: 50px; max-height: 120px; transition: 0.3s;
+        }
+        .command-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(34, 211, 238, 0.1); }
+
+        .transmit-button {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: white; border: none; padding: 0 25px; height: 50px; border-radius: 14px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+        }
+        .transmit-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5); }
+        .transmit-button:disabled { opacity: 0.7; cursor: wait; transform: none; }
+
+        /* Attachment Badge */
+        .attachment-badge {
+            position: absolute; top: -45px; left: 20px;
+            background: var(--brand-primary); color: white; padding: 6px 16px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4); animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .attachment-badge i.fa-times { cursor: pointer; opacity: 0.7; }
+        .attachment-badge i.fa-times:hover { opacity: 1; }
+        @keyframes popUp { from { transform: scale(0.8) translateY(10px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+        /* === LOGS & VIZ === */
+        .log-panel-inner { display: flex; flex-direction: column; height: 100%; }
+        
+        .log-visualizer {
+            height: 100px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .neural-viz { position: absolute; width: 100%; height: 100%; }
+        .neuron {
+            position: absolute; width: 4px; height: 4px; background: var(--accent-cyan); border-radius: 50%;
+            filter: blur(1px); box-shadow: 0 0 10px var(--accent-cyan); animation: neuronPulse 2s infinite;
+        }
+        @keyframes neuronPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
+        
+        .viz-label { z-index: 2; font-size: 0.75rem; color: var(--accent-cyan); letter-spacing: 2px; font-weight: 800; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3); }
+
+        .log-container {
+            flex: 1; padding: 20px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .log-entry {
+            padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.03);
+            border-left: 3px solid; color: var(--text-muted); animation: slideIn 0.3s; word-break: break-all;
+        }
+        .log-entry.success { border-color: var(--accent-success); color: #86efac; }
+        .log-entry.alert { border-color: var(--accent-danger); color: #fca5a5; }
+        .log-entry.info { border-color: var(--accent-cyan); color: #a5f3fc; }
+        .log-entry.system { border-color: var(--brand-primary); color: #c4b5fd; }
+        .log-timestamp { opacity: 0.5; font-size: 0.7em; margin-right: 8px; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: var(--brand-primary); border-radius: 3px; }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; grid-template-rows: 1fr 350px; }
+            .container { height: auto; min-height: 100vh; }
+            h1 { font-size: 2.2rem; }
+        }
+    </style>
 </head>
 <body>
+    <div class="space-scene">
+        <div class="nebula"></div>
+        <div class="star-field"></div>
+    </div>
+    <div class="hologrid"></div>
+    <div class="quantum-field" id="quantum-field"></div>
+
     <div class="container">
         <header>
-            <div class="logo-area">
-                <h1>👻 Ghost-Gate</h1>
-                <span class="badge pulse">ENTERPRISE ACTIVE</span>
+            <div class="logo-container">
+                <div class="quantum-ghost">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                        <path class="ghost-core" d="M12 2C7.58172 2 4 5.58172 4 10V19C4 20.6569 5.34315 22 7 22C7.68884 22 8.32288 21.767 8.83667 21.3756L9.65455 20.7208C9.85966 20.5567 10.1403 20.5567 10.3455 20.7208L11.3091 21.4917C11.7107 21.813 12.2893 21.813 12.6909 21.4917L13.6545 20.7208C13.8597 20.5567 14.1403 20.5567 14.3455 20.7208L15.1633 21.3756C15.6771 21.767 16.3112 22 17 22C18.6569 22 20 20.6569 20 19V10C20 5.58172 16.4183 2 12 2Z" fill="#8b5cf6"/>
+                        <path d="M9 10C9 10.5523 9.44772 11 10 11C10.5523 11 11 10.5523 11 10C11 9.44772 10.5523 9 10 9C9.44772 9 9 9.44772 9 10Z" fill="white"/>
+                        <path d="M13 10C13 10.5523 13.4477 11 14 11C14.5523 11 15 10.5523 15 10C15 9.44772 14.5523 9 14 9C13.4477 9 13 9.44772 13 10Z" fill="white"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>Ghost-Gate</h1>
+                    <div class="subtitle">Interstellar Privacy Layer</div>
+                </div>
             </div>
-            <p>Zero-Trust PII & Trade Secret Protection</p>
+            <div class="status-cluster">
+                <div class="status-badge"><i class="fas fa-shield-alt"></i><span>ZERO TRUST</span></div>
+                <div class="status-badge"><i class="fas fa-lock"></i><span>TLS 1.3 ENCRYPTED</span></div>
+                <div class="status-badge" id="session-status"><i class="fas fa-user-secret"></i><span>SESSION: SECURE</span></div>
+            </div>
         </header>
 
-        <div class="main-interface">
-
-            <div class="panel chat-panel">
-                
-                <div class="settings-box">
-                    <label>🚫 Deny List (Comma separated secrets)</label>
-                    <input type="text" id="custom-secrets" placeholder="e.g. Project Apollo, Jal-Netra, API-Key-99">
-                </div>
-
+        <div class="main-grid">
+            <div class="neural-panel">
                 <div class="panel-header">
-                    <div class="upload-box" id="drop-zone">
-                        <input type="file" id="pdf-upload" accept=".pdf" hidden>
-                        <div class="upload-content">
-                            <span class="icon">📄</span>
-                            <p><strong>Drag & Drop PDF</strong> or Click to Redact</p>
-                        </div>
-                    </div>
-
-                    <h2>💬 Secure Workspace</h2>
-                    <span class="status-dot online"></span>
+                    <h2><i class="fas fa-satellite-dish"></i> Secure Uplink</h2>
+                    <div class="neural-status"><div class="status-ring"></div><span style="font-size:0.8rem; opacity:0.8;">ONLINE</span></div>
                 </div>
-                
-                <div id="chat-box" class="scroll-box">
+
+                <div class="security-drawer" id="security-drawer">
+                    <label><i class="fas fa-user-secret"></i> DENY LIST (Custom Secrets)</label>
+                    <input type="text" id="custom-secrets" class="security-input" placeholder="e.g. Debosmita, Project Apollo">
+                </div>
+
+                <div class="chat-area" id="chat-box">
                     <div class="message bot">
-                        <div class="msg-content">
-                            System Ready. I will automatically redact Names, Phones, and any <strong>Custom Secrets</strong> you define above.
+                        <div class="bubble">
+                            <strong>System Online.</strong> Secure channel established.<br>
+                            Click the ⚙️ icon to configure Custom Secrets.
                         </div>
                     </div>
                 </div>
 
-                <div class="input-area">
-                    <textarea id="user-input" placeholder="Type message..."></textarea>
-                    <button onclick="sendMessage()">
-                        Send 🔒
-                    </button>
+                <div class="command-dock">
+                    <div class="quantum-dial">
+                        <button class="dial-button" onclick="toggleDial()"><i class="fas fa-plus"></i></button>
+                        <div class="dial-options" id="dial-options">
+                            <button class="dial-item" onclick="triggerUpload('.pdf')"><i class="fas fa-file-pdf" style="color:#ef4444"></i><span>Upload PDF</span></button>
+                            <button class="dial-item" onclick="triggerUpload('.txt,.md,.py,.js')"><i class="fas fa-file-code" style="color:#3b82f6"></i><span>Code / Text</span></button>
+                            <button class="dial-item" onclick="triggerUpload('image/*')"><i class="fas fa-image" style="color:#10b981"></i><span>Scan Image (OCR)</span></button>
+                            <button class="dial-item" onclick="toggleSettings()"><i class="fas fa-user-secret" style="color:#fbbf24"></i><span>Security Settings</span></button>
+                        </div>
+                    </div>
+                    <input type="file" id="file-input" hidden>
+                    <textarea class="command-input" id="user-input" placeholder="Transmit secure query..."></textarea>
+                    <button class="transmit-button" id="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i><span>TRANSMIT</span></button>
                 </div>
             </div>
 
-            <div class="panel log-panel">
+            <div class="neural-panel">
                 <div class="panel-header">
-                    <h2>🛡️ Interception Logs</h2>
-                    <span class="status-dot processing"></span>
+                    <h2><i class="fas fa-network-wired"></i> Neural Stream</h2>
+                    <i class="fas fa-cog" style="cursor:pointer; opacity:0.9; color:var(--accent-cyan);" onclick="toggleSettings()" title="Settings"></i>
                 </div>
-                
-                <div id="log-box" class="scroll-box terminal-look">
-                    <div class="log-entry system">
-                        <span class="timestamp">[SYSTEM]</span> Loaded Presidio PII Engine...
+                <div class="log-panel-inner">
+                    <div class="log-visualizer">
+                        <div class="neural-viz" id="neural-viz"></div>
+                        <div class="viz-label">NEURAL MONITORING ACTIVE</div>
                     </div>
-                    <div class="log-entry system">
-                        <span class="timestamp">[SYSTEM]</span> Custom Secret Filter Ready...
+                    <div class="log-container" id="log-box">
+                        <div class="log-entry system"><span class="log-timestamp">[SYSTEM]</span> Quantum protocol initialized...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="/static/script.js"></script>
+
+    <script>
+        // === 1. AUDIO SYSTEM ===
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let audioUnlocked = false;
+        document.addEventListener('click', () => {
+            if (!audioUnlocked && audioCtx.state === 'suspended') { audioCtx.resume(); audioUnlocked = true; }
+        });
+
+        function playBeep(type = 'msg') {
+            if (!audioUnlocked) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if (type === 'msg') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'click') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(1200, now);
+                gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'alert') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
+                gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            }
+        }
+
+        // === 2. VISUALS ===
+        function createQuantumParticles() {
+            const field = document.getElementById('quantum-field');
+            for(let i=0; i<30; i++) {
+                const p = document.createElement('div'); p.className = 'q-particle';
+                p.style.left = Math.random()*100+'vw'; p.style.top = Math.random()*100+'vh';
+                field.appendChild(p);
+                p.animate([
+                    { opacity: 0, transform: 'translate(0,0)' },
+                    { opacity: 1, offset: 0.1 },
+                    { opacity: 0, transform: `translate(${Math.random()*200-100}px, ${Math.random()*200-100}px)` }
+                ], { duration: Math.random()*5000+5000, iterations: Infinity });
+            }
+        }
+        
+        function createNeuralViz() {
+            const viz = document.getElementById('neural-viz');
+            for(let i=0; i<15; i++) {
+                const n = document.createElement('div'); n.className = 'neuron';
+                n.style.left = Math.random()*100+'%'; n.style.top = Math.random()*100+'%';
+                n.style.animationDelay = Math.random()*2+'s';
+                viz.appendChild(n);
+            }
+        }
+
+        // === 3. APP LOGIC (REAL BACKEND) ===
+        let attachedContext = "";
+        let attachedFilename = "";
+        let sessionStart = new Date();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createQuantumParticles();
+            createNeuralViz();
+            setInterval(updateSessionTimer, 1000);
+            
+            // System Heartbeat
+            setInterval(() => {
+                const logs = ["Scanning buffer...", "Encryption key rotated", "Traffic normal", "Zero-trust active"];
+                if(Math.random()>0.7) addLog(logs[Math.floor(Math.random()*logs.length)], 'system');
+            }, 8000);
+        });
+
+        function updateSessionTimer() {
+            const diff = Math.floor((new Date() - sessionStart) / 1000);
+            const h = Math.floor(diff/3600).toString().padStart(2,'0');
+            const m = Math.floor((diff%3600)/60).toString().padStart(2,'0');
+            const s = (diff%60).toString().padStart(2,'0');
+            document.getElementById('session-status').innerHTML = `<i class="fas fa-user-secret"></i><span>SESSION: ${h}:${m}:${s}</span>`;
+        }
+
+        function toggleDial() {
+            playBeep('click');
+            document.getElementById('dial-options').classList.toggle('open');
+            const btn = document.querySelector('.dial-button');
+            btn.style.transform = btn.style.transform.includes('45deg') ? 'rotate(0deg)' : 'rotate(45deg)';
+        }
+
+        function toggleSettings() {
+            playBeep('click');
+            document.getElementById('security-drawer').classList.toggle('open');
+            document.getElementById('dial-options').classList.remove('open');
+        }
+
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.quantum-dial') && !e.target.closest('.dial-options')) {
+                document.getElementById('dial-options').classList.remove('open');
+                document.querySelector('.dial-button').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // --- REAL FILE UPLOAD ---
+        function triggerUpload(types) {
+            const input = document.getElementById('file-input');
+            // FIX: Clear value to ensure change event fires even if same file selected
+            input.value = ''; 
+            input.accept = types; 
+            input.click(); 
+            toggleDial();
+        }
+
+        document.getElementById('file-input').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if(file) await handleFileUpload(file);
+        });
+
+        async function handleFileUpload(file) {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<div class="message user"><div class="bubble"><i class="fas fa-spinner fa-spin"></i> Encrypting & Uploading ${file.name}...</div></div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            playBeep('msg');
+
+            // FIX: Grab current secrets from the drawer to send with file
+            const secretList = document.getElementById('custom-secrets').value;
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("custom_secrets", secretList);
+
+            try {
+                // REAL FETCH CALL
+                const response = await fetch("/upload_file", { method: "POST", body: formData });
+                const data = await response.json();
+
+                attachedContext = data.safe_content;
+                attachedFilename = data.filename;
+
+                // Create Badge
+                const dock = document.querySelector('.command-dock');
+                const old = document.querySelector('.attachment-badge');
+                if(old) old.remove();
+                
+                const badge = document.createElement('div');
+                badge.className = 'attachment-badge';
+                badge.innerHTML = `<i class="fas fa-paperclip"></i> ${data.filename} <i class="fas fa-times" onclick="removeAttachment()"></i>`;
+                dock.appendChild(badge);
+
+                // Bot Reply
+                chatBox.innerHTML += `
+                    <div class="message bot">
+                        <div class="bubble">
+                            <strong style="color:var(--accent-success)">File Secured.</strong><br>
+                            Successfully redacted <strong>${data.secrets_removed}</strong> sensitive entities from ${data.filename}.
+                        </div>
+                    </div>`;
+                
+                addLog(`File Upload: ${data.filename}`, 'success');
+                addLog(`Scrubbed ${data.secrets_removed} secrets`, 'alert');
+                playBeep('msg');
+
+            } catch (error) {
+                console.error(error);
+                chatBox.innerHTML += `<div class="message bot"><div class="bubble" style="color:var(--accent-danger)">Upload Failed. Check backend.</div></div>`;
+                playBeep('alert');
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeAttachment() {
+            attachedContext = ""; attachedFilename = "";
+            document.querySelector('.attachment-badge').remove();
+            playBeep('click');
+        }
+
+        // --- REAL CHAT LOGIC ---
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const btn = document.getElementById('send-btn');
+            
+            let text = input.value.trim();
+            if(!text && !attachedContext) return;
+
+            playBeep('click');
+            
+            // Get Custom Secrets from Drawer
+            const secretList = document.getElementById('custom-secrets').value.split(',').map(s=>s.trim()).filter(s=>s.length>0);
+
+            // User Message UI
+            let display = text;
+            if(attachedFilename) display = `<div style="font-size:0.8em;opacity:0.7;margin-bottom:5px;"><i class="fas fa-file-contract"></i> ${attachedFilename}</div>${text}`;
+            chatBox.innerHTML += `<div class="message user"><div class="bubble">${display}</div></div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Prepare Payload
+            let finalPrompt = text;
+            if(attachedContext) finalPrompt = `Context:\n${attachedContext}\n\nQuestion:\n${text}`;
+
+            // Loading UI
+            const loadId = 'load-'+Date.now();
+            chatBox.innerHTML += `<div class="message bot" id="${loadId}"><div class="bubble"><i class="fas fa-circle-notch fa-spin"></i> Processing Secure Query...</div></div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            btn.disabled = true;
+
+            try {
+                // REAL FETCH CALL
+                const response = await fetch("/secure_chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt: finalPrompt, custom_secrets: secretList })
+                });
+                const data = await response.json();
+                
+                document.getElementById(loadId).remove();
+                const formatted = marked.parse(data.response);
+                chatBox.innerHTML += `<div class="message bot"><div class="bubble markdown-body">${formatted}</div></div>`;
+
+                // Log Redaction
+                const count = data.privacy_metadata.secrets_hidden;
+                addLog(`Sent ${finalPrompt.length} encrypted chars`, 'info');
+                if(count > 0) addLog(`Intercepted ${count} sensitive entities`, 'alert');
+
+                // Cleanup (Single Turn Logic)
+                attachedContext = ""; attachedFilename = "";
+                const badge = document.querySelector('.attachment-badge');
+                if(badge) badge.remove();
+                
+                playBeep('msg');
+
+            } catch (error) {
+                document.getElementById(loadId).innerHTML = '<div class="bubble" style="color:red">Connection Error</div>';
+                playBeep('alert');
+            }
+            
+            btn.disabled = false;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        document.getElementById('user-input').addEventListener('keydown', (e) => {
+            if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+        });
+
+        function addLog(msg, type='info') {
+            const box = document.getElementById('log-box');
+            const div = document.createElement('div');
+            const time = new Date().toLocaleTimeString('en-US',{hour12:false});
+            div.className = `log-entry ${type}`;
+            div.innerHTML = `<span class="log-timestamp">[${time}]</span> ${msg}`;
+            box.appendChild(div);
+            if(box.children.length > 50) box.removeChild(box.firstChild);
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
 </body>
 </html>

@@ -1,11 +1,16 @@
 import io
 import re
 from pypdf import PdfReader
+from PIL import Image
+import pytesseract
 from presidio_analyzer import AnalyzerEngine
-# We don't need AnonymizerEngine anymore since we will handle replacements manually
 
-# Initialize Engine
+# 1. Initialize Engines
 analyzer = AnalyzerEngine()
+
+# 2. Configure Tesseract Path (Windows)
+# If Tesseract is in your system PATH, you can remove this line.
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def protect_prompt(text: str, custom_secrets: list = None):
     """
@@ -26,40 +31,30 @@ def protect_prompt(text: str, custom_secrets: list = None):
                 text = pattern.sub(placeholder, text)
                 entity_map[placeholder] = secret
 
-    # --- PHASE 2: URL REDACTION (NEW!) ---
-    # We catch links BEFORE Presidio because links often contain names
+    # --- PHASE 2: URL REDACTION ---
     # Catches http://, https://, and www. links
     url_pattern = re.compile(r'(https?://\S+|www\.\S+)', re.IGNORECASE)
     found_urls = list(set(url_pattern.findall(text))) # Get unique URLs
 
     for url in found_urls:
         placeholder = f"<LINK_{len(entity_map) + 1}>"
-        # Use simple replace for speed and safety
         text = text.replace(url, placeholder)
         entity_map[placeholder] = url
 
     # --- PHASE 3: STANDARD PII ---
-    # Analyze the text to find where the secrets are
     results = analyzer.analyze(
         text=text, 
         entities=["PERSON", "PHONE_NUMBER", "EMAIL_ADDRESS", "US_SSN", "CREDIT_CARD"], 
         language='en'
     )
 
-    # Sort results in REVERSE order (end to start) to prevent index shifting
+    # Sort results in REVERSE order to prevent index shifting during replacement
     results.sort(key=lambda x: x.start, reverse=True)
 
     for result in results:
-        # 1. Grab the original text (e.g., "John Doe")
         original_value = text[result.start:result.end]
-        
-        # 2. Create a unique tag (e.g., <PERSON_5>)
         placeholder = f"<{result.entity_type}_{len(entity_map) + 1}>"
-        
-        # 3. Store the mapping
         entity_map[placeholder] = original_value
-        
-        # 4. Replace it in the string
         text = text[:result.start] + placeholder + text[result.end:]
 
     return text, entity_map
@@ -72,9 +67,9 @@ def restore_response(text: str, entity_map: dict):
         text = text.replace(placeholder, f"**{original_value}**")
     return text
 
-def process_pdf(file_bytes):
+def process_pdf_with_secrets(file_bytes, custom_secrets):
     """
-    Reads a PDF, extracts text, and sanitizes it.
+    Reads a PDF and sanitizes it using a specific list of secrets.
     """
     try:
         reader = PdfReader(io.BytesIO(file_bytes))
@@ -85,11 +80,36 @@ def process_pdf(file_bytes):
             if text:
                 full_text += text + "\n"
         
-        # Sanitize the text (Empty custom secrets list for auto-scan)
-        safe_text, entity_map = protect_prompt(full_text, custom_secrets=[])
+        # Pass the secrets here!
+        safe_text, entity_map = protect_prompt(full_text, custom_secrets=custom_secrets)
+        return safe_text, len(entity_map)
+        
+    except Exception as e:
+        print(f"PDF Error: {e}")
+        return "Error reading PDF file.", 0
+
+def process_pdf(file_bytes):
+    """
+    Wrapper for backward compatibility (defaults to no custom secrets).
+    """
+    return process_pdf_with_secrets(file_bytes, [])
+
+def process_image(file_bytes, custom_secrets):
+    """
+    Reads an image (PNG/JPG), extracts text via OCR, and sanitizes it.
+    """
+    try:
+        # Convert bytes to Image
+        image = Image.open(io.BytesIO(file_bytes))
+        
+        # Extract Text
+        raw_text = pytesseract.image_to_string(image)
+        
+        # Sanitize
+        safe_text, entity_map = protect_prompt(raw_text, custom_secrets=custom_secrets)
         
         return safe_text, len(entity_map)
         
     except Exception as e:
-        print(f"Error reading PDF: {e}")
-        return "Error reading PDF file.", 0
+        print(f"OCR Error: {e}")
+        return "Error analyzing image. Ensure Tesseract OCR is installed.", 0
