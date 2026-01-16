@@ -3,35 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghost-Gate | Zero Trust Proxy</title>
+    <title>Ghost-Gate | Enterprise Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>👻 Ghost-Gate <span class="badge">SECURE</span></h1>
-            <p>Zero-Trust PII Redaction Layer</p>
+            <div class="logo-area">
+                <h1>👻 Ghost-Gate</h1>
+                <span class="badge pulse">ENTERPRISE ACTIVE</span>
+            </div>
+            <p>Zero-Trust PII & Trade Secret Protection</p>
         </header>
 
         <div class="main-interface">
+
             <div class="panel chat-panel">
-                <h2>💬 User Chat</h2>
+                
+                <div class="settings-box">
+                    <label>🚫 Deny List (Comma separated secrets)</label>
+                    <input type="text" id="custom-secrets" placeholder="e.g. Project Apollo, Jal-Netra, API-Key-99">
+                </div>
+
+                <div class="panel-header">
+                    <div class="upload-box" id="drop-zone">
+                        <input type="file" id="pdf-upload" accept=".pdf" hidden>
+                        <div class="upload-content">
+                            <span class="icon">📄</span>
+                            <p><strong>Drag & Drop PDF</strong> or Click to Redact</p>
+                        </div>
+                    </div>
+
+                    <h2>💬 Secure Workspace</h2>
+                    <span class="status-dot online"></span>
+                </div>
+                
                 <div id="chat-box" class="scroll-box">
                     <div class="message bot">
-                        Hello! I am a secure AI. Any personal data you send is redacted before it leaves this device.
+                        <div class="msg-content">
+                            System Ready. I will automatically redact Names, Phones, and any <strong>Custom Secrets</strong> you define above.
+                        </div>
                     </div>
                 </div>
+
                 <div class="input-area">
-                    <textarea id="user-input" placeholder="Type sensitive data here... (e.g. My name is John, SSN 123-45)"></textarea>
-                    <button onclick="sendMessage()">Send Securely 🔒</button>
+                    <textarea id="user-input" placeholder="Type message..."></textarea>
+                    <button onclick="sendMessage()">
+                        Send 🔒
+                    </button>
                 </div>
             </div>
 
             <div class="panel log-panel">
-                <h2>🛡️ Live Security Logs</h2>
+                <div class="panel-header">
+                    <h2>🛡️ Interception Logs</h2>
+                    <span class="status-dot processing"></span>
+                </div>
+                
                 <div id="log-box" class="scroll-box terminal-look">
-                    <div class="log-entry system">[SYSTEM] Ghost-Gate Active...</div>
-                    <div class="log-entry system">[SYSTEM] Redis Vault Connected...</div>
+                    <div class="log-entry system">
+                        <span class="timestamp">[SYSTEM]</span> Loaded Presidio PII Engine...
+                    </div>
+                    <div class="log-entry system">
+                        <span class="timestamp">[SYSTEM]</span> Custom Secret Filter Ready...
+                    </div>
                 </div>
             </div>
         </div>

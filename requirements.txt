@@ -5,3 +5,5 @@ presidio-anonymizer
 spacy
 fakeredis
 python-dotenv
+google-generativeai
+python-dotenv
